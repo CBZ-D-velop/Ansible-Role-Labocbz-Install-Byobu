@@ -1,0 +1,100 @@
+---
+# Don't forget to keep this file updated
+# molecule/<scenario>/verify.yml
+- name: "Verify"
+  hosts: "all"
+  gather_facts: true
+  tasks:
+
+    - name: "Get list of directories in /home"
+      when: inv_byobu_enable_byobu_for_all or inv_byobu_enable_neofetch_for_all
+      ansible.builtin.command: "ls /home"
+      register: home_directories
+      changed_when: home_directories.rc != 0
+
+    - name: "Check Neofetch installs"
+      when: inv_byobu_install_neofetch
+      block:
+        - name: "Check Neofetch for root"
+          block:
+            - name: "Check Neofetch command response"
+              register: output
+              changed_when: output.rc != 0
+              failed_when: output.rc != 0
+              ansible.builtin.command: "neofetch"
+
+            - name: "Check Neofetch install and configuration for root"
+              register: file_check
+              failed_when: not file_check.stat.exists
+              ansible.builtin.stat:
+                path: "/root/.config/neofetch/config.conf"
+
+        - name: "Check Neofetch for all users"
+          when: inv_byobu_enable_neofetch_for_all and home_directories
+          block:
+            - name: "Check Neofetch command response for all users"
+              loop: "{{ home_directories.stdout_lines }}"
+              loop_control:
+                loop_var: "user"
+              when: user != 'lost+found'
+              become: yes
+              become_user: "{{ user }}"
+              register: output
+              changed_when: output.rc != 0
+              failed_when: output.rc != 0
+              ansible.builtin.command: "neofetch"
+
+            - name: "Check Neofetch install and configuration for all users"
+              loop: "{{ home_directories.stdout_lines }}"
+              loop_control:
+                loop_var: "user"
+              when: user != 'lost+found'
+              become: yes
+              become_user: "{{ user }}"
+              register: file_check
+              failed_when: not file_check.stat.exists
+              ansible.builtin.stat:
+                path: "/home/{{ user }}/.config/neofetch/config.conf"
+
+    - name: "Check Byobu installs"
+      block:
+        - name: "Check Byobu for root"
+          block:
+            - name: "Check Byobu command response"
+              register: output
+              changed_when: output.rc != 0
+              failed_when: output.rc != 1
+              ansible.builtin.command: "byobu"
+
+            - name: "Check Byobu install and configuration for root"
+              register: file_check
+              failed_when: not file_check.stat.exists
+              ansible.builtin.stat:
+                path: "/root/.byobu/backend"
+
+        - name: "Check Byobu for all users"
+          when: inv_byobu_enable_byobu_for_all and home_directories
+          block:
+            - name: "Get Byobu command response for all users"
+              loop: "{{ home_directories.stdout_lines }}"
+              loop_control:
+                loop_var: "user"
+              when: user != 'lost+found'
+              become: yes
+              become_user: "{{ user }}"
+              register: output
+              changed_when: output.rc != 0
+              failed_when: output.rc != 1
+              ansible.builtin.command: "byobu"
+
+            - name: "Get Byobu install and configuration for all users"
+              loop: "{{ home_directories.stdout_lines }}"
+              loop_control:
+                loop_var: "user"
+              when: user != 'lost+found'
+              become: yes
+              become_user: "{{ user }}"
+              register: file_check
+              failed_when: not file_check.stat.exists
+              ansible.builtin.stat:
+                path: "/home/{{ user }}/.byobu/backend"

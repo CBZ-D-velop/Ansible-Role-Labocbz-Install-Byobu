@@ -1,0 +1,5 @@
+---
+
+inv_byobu_install_neofetch: true
+inv_byobu_enable_byobu_for_all: true
+inv_byobu_enable_neofetch_for_all: true

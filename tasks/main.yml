@@ -1,0 +1,106 @@
+---
+- name: "Install and configure Byobu and import custom Shell"
+  block:
+    - name: "Install packages"
+      ansible.builtin.package:
+        update_cache: true
+        name:
+          - tmux
+          - byobu
+
+    - name: "Copy byobu configurations files"
+      loop:
+        - "f-keys.tmux"
+        - "f-keys.screen"
+      loop_control:
+        loop_var: file
+      ansible.builtin.copy:
+        src: "files/{{ file }}"
+        dest: "/usr/share/byobu/keybindings/{{ file }}"
+        owner: "root"
+        group: "root"
+        mode: 0755
+
+    - name: "Import the custom shell"
+      ansible.builtin.template:
+        src: "templates/bash.bashrc.j2"
+        dest: "/etc/bash.bashrc"
+        owner: "root"
+        group: "root"
+        mode: 0755
+
+- name: "Get list of directories in /home"
+  when: (byobu_enable_neofetch_for_all and byobu_install_neofetch) or byobu_enable_byobu_for_all
+  ansible.builtin.command: "ls /home"
+  register: home_directories
+  changed_when: home_directories.rc != 0
+
+- name: "Install Neofetch and configure it"
+  when: byobu_install_neofetch
+  block:
+    - name: "Intall packages"
+      ansible.builtin.package:
+        update_cache: true
+        name:
+          - neofetch
+
+    - name: "Create home directories for neofetch config for root"
+      ansible.builtin.file:
+        path: "/root/.config/neofetch"
+        owner: "root"
+        group: "root"
+        state: directory
+        recurse: yes
+        mode: 0755
+
+    - name: "Copy neofetch configuration to home directories for root"
+      ansible.builtin.copy:
+        src: "files/neofetch.conf"
+        dest: "/root/.config/neofetch/config.conf"
+        owner: "root"
+        group: "root"
+        mode: 0755
+
+    - name: "Enable neofetch for root"
+      ansible.builtin.lineinfile:
+        path: "/root/.bashrc"
+        line: "neofetch"
+        state: present
+
+    - name: "Configure Neofetchfor all detected users"
+      loop: "{{ home_directories.stdout_lines }}"
+      when: user != 'lost+found' and home_directories and byobu_enable_neofetch_for_all
+      loop_control:
+        loop_var: "user"
+      ansible.builtin.include_tasks:
+        file: "tasks/enable_byobu_for_user.yml"
+
+- name: "Enable byobu for all users"
+  when: byobu_enable_byobu_for_all and user != 'lost+found'
+  loop: "{{ home_directories.stdout_lines }}"
+  loop_control:
+    loop_var: "user"
+  ansible.builtin.include_tasks:
+    file: "tasks/enable_byobu_for_user.yml"
+
+- name: "Enable byobu for root"
+  become_user: "root"
+  become: true
+  block:
+    - name: Enable byobu for root
+      ansible.builtin.command: "byobu-enable"
+      register: output
+      changed_when: output.rc != 0
+
+    - name: "Import the byobu backend root"
+      ansible.builtin.template:
+        src: "templates/backend.j2"
+        dest: "/root/.byobu/backend"
+        owner: "root"
+        group: "root"
+        mode: 0755
+
+    - name: "Enable byobu prompt for root"
+      ansible.builtin.command: "byobu-enable-prompt"
+      register: output
+      changed_when: output.rc != 0

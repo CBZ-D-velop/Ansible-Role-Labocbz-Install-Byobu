@@ -1,0 +1,20 @@
+---
+- name: "Converge"
+  hosts: "all"
+  tasks:
+    # replace these tasks with whatever you find suitable to test
+    - name: "Copy something to test use of synchronize module"
+      ansible.builtin.copy:
+        src: "/etc/hosts"
+        dest: "/tmp/hosts-from-controller"
+        mode: 0700
+
+    - name: "Include labocbz.install_byobu"
+      tags:
+        - "labocbz.install_byobu"
+      vars:
+        byobu_install_neofetch: "{{ inv_byobu_install_neofetch }}"
+        byobu_enable_byobu_for_all: "{{ inv_byobu_enable_byobu_for_all }}"
+        byobu_enable_neofetch_for_all: "{{ inv_byobu_enable_neofetch_for_all }}"
+      ansible.builtin.include_role:
+        name: "labocbz.install_byobu"

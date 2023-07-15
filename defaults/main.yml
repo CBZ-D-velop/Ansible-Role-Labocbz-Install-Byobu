@@ -1,0 +1,9 @@
+---
+byobu_install_neofetch: true
+
+byobu_enable_byobu_for_all: true
+byobu_enable_neofetch_for_all: true
+byobu_log_commands_for_all: true
+byobu_set_nano_as_default_for_all: true
+
+byobu_default_backend: "tmux"
