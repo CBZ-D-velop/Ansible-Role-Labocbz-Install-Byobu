@@ -1,4 +1,8 @@
 ---
+inv_prepare_host_users:
+  - login: "testuser"
+    group: "testuser"
+    sudoer: true
 
 inv_byobu_install_neofetch: true
 inv_byobu_enable_byobu_for_all: true

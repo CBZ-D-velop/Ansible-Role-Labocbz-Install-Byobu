@@ -6,13 +6,15 @@
     - name: "enable_byobu_for_user | Enable Byobu"
       ansible.builtin.command: "byobu-enable"
       changed_when: false
+
     - name: "enable_byobu_for_user | Import the byobu backend for user"
       ansible.builtin.template:
         src: "templates/backend.j2"
         dest: "/home/{{ user }}/.byobu/backend"
         owner: "{{ user }}"
         group: "{{ user }}"
-        mode: 0755
+        mode: "0755"
+
     - name: "enable_byobu_for_user | Enable byobu prompt for user"
       ansible.builtin.command: "byobu-enable-prompt"
       register: output
