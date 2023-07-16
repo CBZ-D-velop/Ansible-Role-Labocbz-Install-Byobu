@@ -5,8 +5,8 @@
       ansible.builtin.package:
         update_cache: true
         name:
-          - tmux
-          - byobu
+          - "tmux"
+          - "byobu"
 
     - name: "Copy byobu configurations files"
       loop:
@@ -19,7 +19,7 @@
         dest: "/usr/share/byobu/keybindings/{{ file }}"
         owner: "root"
         group: "root"
-        mode: 0755
+        mode: "0755"
 
     - name: "Import the custom shell"
       ansible.builtin.template:
@@ -27,10 +27,10 @@
         dest: "/etc/bash.bashrc"
         owner: "root"
         group: "root"
-        mode: 0755
+        mode: "0755"
 
 - name: "Get list of directories in /home"
-  when: (byobu_enable_neofetch_for_all and byobu_install_neofetch) or byobu_enable_byobu_for_all
+  when: ((byobu_enable_neofetch_for_all | default(false)) and (byobu_install_neofetch | default(false))) or (byobu_enable_byobu_for_all | default(false))
   ansible.builtin.command: "ls /home"
   register: home_directories
   changed_when: home_directories.rc != 0
@@ -42,7 +42,7 @@
       ansible.builtin.package:
         update_cache: true
         name:
-          - neofetch
+          - "neofetch"
 
     - name: "Create home directories for neofetch config for root"
       ansible.builtin.file:
@@ -51,7 +51,7 @@
         group: "root"
         state: directory
         recurse: yes
-        mode: 0755
+        mode: "0755"
 
     - name: "Copy neofetch configuration to home directories for root"
       ansible.builtin.copy:
@@ -59,7 +59,7 @@
         dest: "/root/.config/neofetch/config.conf"
         owner: "root"
         group: "root"
-        mode: 0755
+        mode: "0755"
 
     - name: "Enable neofetch for root"
       ansible.builtin.lineinfile:
@@ -98,7 +98,7 @@
         dest: "/root/.byobu/backend"
         owner: "root"
         group: "root"
-        mode: 0755
+        mode: "0755"
 
     - name: "Enable byobu prompt for root"
       ansible.builtin.command: "byobu-enable-prompt"
