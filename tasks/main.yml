@@ -30,13 +30,13 @@
         mode: "0755"
 
 - name: "Get list of directories in /home"
-  when: ((byobu_enable_neofetch_for_all | default(false)) and (byobu_install_neofetch | default(false))) or (byobu_enable_byobu_for_all | default(false))
+  when: ((install_byobu_enable_neofetch_for_all | default(false)) and (install_byobu_install_neofetch | default(false))) or (install_byobu_enable_byobu_for_all | default(false))
   ansible.builtin.command: "ls /home"
   register: home_directories
   changed_when: home_directories.rc != 0
 
 - name: "Install Neofetch and configure it"
-  when: byobu_install_neofetch
+  when: install_byobu_install_neofetch
   block:
     - name: "Intall packages"
       ansible.builtin.package:
@@ -69,19 +69,19 @@
 
     - name: "Configure Neofetchfor all detected users"
       loop: "{{ home_directories.stdout_lines }}"
-      when: user != 'lost+found' and home_directories.stdout_lines and byobu_enable_neofetch_for_all
+      when: user != 'lost+found' and home_directories.stdout_lines and install_byobu_enable_neofetch_for_all
       loop_control:
         loop_var: "user"
       ansible.builtin.include_tasks:
         file: "tasks/configure_neofetch_for_user.yml"
 
 - name: "Enable byobu for all users"
-  when: byobu_enable_byobu_for_all and user != 'lost+found' and home_directories.stdout_lines
+  when: install_byobu_enable_byobu_for_all and user != 'lost+found' and home_directories.stdout_lines
   loop: "{{ home_directories.stdout_lines }}"
   loop_control:
     loop_var: "user"
   ansible.builtin.include_tasks:
-    file: "tasks/enable_byobu_for_user.yml"
+    file: "tasks/enable_install_byobu_for_user.yml"
 
 - name: "Enable byobu for root"
   become_user: "root"
