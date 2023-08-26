@@ -69,14 +69,14 @@
 
     - name: "Configure Neofetchfor all detected users"
       loop: "{{ home_directories.stdout_lines }}"
-      when: user != 'lost+found' and home_directories and byobu_enable_neofetch_for_all
+      when: user != 'lost+found' and home_directories.stdout_lines and byobu_enable_neofetch_for_all
       loop_control:
         loop_var: "user"
       ansible.builtin.include_tasks:
-        file: "tasks/enable_byobu_for_user.yml"
+        file: "tasks/configure_neofetch_for_user.yml"
 
 - name: "Enable byobu for all users"
-  when: byobu_enable_byobu_for_all and user != 'lost+found'
+  when: byobu_enable_byobu_for_all and user != 'lost+found' and home_directories.stdout_lines
   loop: "{{ home_directories.stdout_lines }}"
   loop_control:
     loop_var: "user"
