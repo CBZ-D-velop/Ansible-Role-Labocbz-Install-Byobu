@@ -81,7 +81,7 @@
   loop_control:
     loop_var: "user"
   ansible.builtin.include_tasks:
-    file: "tasks/enable_install_byobu_for_user.yml"
+    file: "tasks/enable_byobu_for_user.yml"
 
 - name: "Enable byobu for root"
   become_user: "root"
