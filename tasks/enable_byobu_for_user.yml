@@ -1,5 +1,5 @@
 ---
-- name: "enable_byobu_for_user | Enable Byobu for a user"
+- name: "enable_byobu_for_user | Enable Byobu for user: {{ user }}"
   become_user: "{{ user }}"
   become: true
   block:
@@ -7,7 +7,7 @@
       ansible.builtin.command: "byobu-enable"
       changed_when: false
 
-    - name: "enable_byobu_for_user | Import the byobu backend for user"
+    - name: "enable_byobu_for_user | Import the byobu backend for user: {{ user }}"
       ansible.builtin.template:
         src: "templates/backend.j2"
         dest: "/home/{{ user }}/.byobu/backend"
@@ -15,7 +15,7 @@
         group: "{{ user }}"
         mode: "0755"
 
-    - name: "enable_byobu_for_user | Enable byobu prompt for user"
+    - name: "enable_byobu_for_user | Enable byobu prompt for user: {{ user }}"
       ansible.builtin.command: "byobu-enable-prompt"
       register: output
       changed_when: false

@@ -1,6 +1,5 @@
 ---
-- name: "configure_neofetch_for_user | Create home directories for neofetch config for all current users"
-  when: user != 'lost+found' and home_directories.stdout_lines
+- name: "configure_neofetch_for_user | Create home directories for neofetch config for all current user: {{ user }}"
   ansible.builtin.file:
     path: "/home/{{ user }}/.config/neofetch"
     owner: "{{ user }}"
@@ -9,7 +8,7 @@
     recurse: yes
     mode: "0755"
 
-- name: "configure_neofetch_for_user | Copy neofetch configuration to home directories for all current users"
+- name: "configure_neofetch_for_user | Copy neofetch configuration to home directories for all current user: {{ user }}"
   ansible.builtin.copy:
     src: "files/neofetch.conf"
     dest: "/home/{{ user }}/.config/neofetch/config.conf"
@@ -17,8 +16,7 @@
     group: "{{ user }}"
     mode: "0755"
 
-- name: "configure_neofetch_for_user | Enable Neofetch for all current users"
-  when: user != 'lost+found'
+- name: "configure_neofetch_for_user | Enable Neofetch for all current user: {{ user }}"
   ansible.builtin.lineinfile:
     path: "/home/{{ user }}/.bashrc"
     line: "neofetch"

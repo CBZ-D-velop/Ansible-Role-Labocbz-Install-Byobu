@@ -114,14 +114,14 @@ Some vars a required to run this role:
 
 ```YAML
 ---
-byobu_install_neofetch: true
+install_byobu_install_neofetch: true
 
-byobu_enable_byobu_for_all: true
-byobu_enable_neofetch_for_all: true
-byobu_log_commands_for_all: true
-byobu_set_nano_as_default_for_all: true
+install_byobu_enable_byobu_for_all: true
+install_byobu_enable_neofetch_for_all: true
+install_byobu_log_commands_for_all: true
+install_byobu_set_nano_as_default_for_all: true
 
-byobu_default_backend: "tmux"
+install_byobu_default_backend: "tmux"
 
 ```
 
@@ -135,9 +135,9 @@ In order to surchage vars, you have multiples possibilities but for mains cases 
 # From inventory
 ---
 
-inv_byobu_install_neofetch: true
-inv_byobu_enable_byobu_for_all: true
-inv_byobu_enable_neofetch_for_all: true
+inv_install_byobu_install_neofetch: true
+inv_install_byobu_enable_byobu_for_all: true
+inv_install_byobu_enable_neofetch_for_all: true
 
 ```
 
@@ -156,9 +156,9 @@ To run this role, you can copy the molecule/default/converge.yml playbook and ad
     tags:
     - "labocbz.install_byobu"
     vars:
-    byobu_install_neofetch: "{{ inv_byobu_install_neofetch }}"
-    byobu_enable_byobu_for_all: "{{ inv_byobu_enable_byobu_for_all }}"
-    byobu_enable_neofetch_for_all: "{{ inv_byobu_enable_neofetch_for_all }}"
+    install_byobu_install_neofetch: "{{ inv_install_byobu_install_neofetch }}"
+    install_byobu_enable_byobu_for_all: "{{ inv_install_byobu_enable_byobu_for_all }}"
+    install_byobu_enable_neofetch_for_all: "{{ inv_install_byobu_enable_neofetch_for_all }}"
     ansible.builtin.include_role:
     name: "labocbz.install_byobu"
 ```
