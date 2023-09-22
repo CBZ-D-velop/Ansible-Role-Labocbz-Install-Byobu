@@ -19,6 +19,7 @@
     - name: "enable_byobu_for_user | Enable byobu prompt for user: {{ user }}"
       register: output
       changed_when: false
+      failed_when: false
       ignore_errors: true
       ansible.builtin.command: "byobu-enable-prompt"
 

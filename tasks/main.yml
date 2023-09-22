@@ -103,6 +103,7 @@
     - name: "Enable byobu prompt for root"
       register: output
       changed_when: false
+      failed_when: false
       ignore_errors: true
       ansible.builtin.command: "byobu-enable-prompt"
 
