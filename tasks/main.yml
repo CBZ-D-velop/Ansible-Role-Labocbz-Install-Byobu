@@ -101,6 +101,8 @@
         mode: "0755"
 
     - name: "Enable byobu prompt for root"
-      ansible.builtin.command: "byobu-enable-prompt"
       register: output
-      changed_when: output.rc != 0
+      changed_when: false
+      ignore_errors: true
+      ansible.builtin.command: "byobu-enable-prompt"
+
