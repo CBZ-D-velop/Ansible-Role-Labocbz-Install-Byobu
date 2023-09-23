@@ -28,7 +28,7 @@
 set -g prefix F12
 
 # Clear the slate
-source $install_byobu_PREFIX/share/byobu/keybindings/f-keys.tmux.disable
+#source $install_byobu_PREFIX/share/byobu/keybindings/f-keys.tmux.disable
 
 # Byobu's Keybindings
 # Documented in: $install_byobu_PREFIX/share/doc/byobu/help.tmux.txt
