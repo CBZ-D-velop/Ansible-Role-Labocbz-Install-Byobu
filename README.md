@@ -116,7 +116,6 @@ Some vars a required to run this role:
 ---
 install_byobu_install_neofetch: true
 
-install_byobu_enable_byobu_for_all: true
 install_byobu_enable_neofetch_for_all: true
 install_byobu_log_commands_for_all: true
 install_byobu_set_nano_as_default_for_all: true
@@ -136,7 +135,6 @@ In order to surchage vars, you have multiples possibilities but for mains cases 
 ---
 
 inv_install_byobu_install_neofetch: true
-inv_install_byobu_enable_byobu_for_all: true
 inv_install_byobu_enable_neofetch_for_all: true
 
 ```
@@ -157,7 +155,6 @@ To run this role, you can copy the molecule/default/converge.yml playbook and ad
     - "labocbz.install_byobu"
     vars:
     install_byobu_install_neofetch: "{{ inv_install_byobu_install_neofetch }}"
-    install_byobu_enable_byobu_for_all: "{{ inv_install_byobu_enable_byobu_for_all }}"
     install_byobu_enable_neofetch_for_all: "{{ inv_install_byobu_enable_neofetch_for_all }}"
     ansible.builtin.include_role:
     name: "labocbz.install_byobu"
@@ -170,6 +167,10 @@ Here you can put your change to keep a trace of your work and decisions.
 ### 2023-04-27: First Init
 
 * First init of this role with the bootstrap_role playbook by Lord Robin Crombez
+
+### 2023-09-24: No more Byobu activation
+
+* Role doesn't enable byobu anymore (error on files loading)
 
 ## Authors
 

@@ -74,36 +74,3 @@
         loop_var: "user"
       ansible.builtin.include_tasks:
         file: "tasks/configure_neofetch_for_user.yml"
-
-- name: "Enable byobu for all users"
-  when: install_byobu_enable_byobu_for_all and user != 'lost+found' and home_directories.stdout_lines
-  loop: "{{ home_directories.stdout_lines }}"
-  loop_control:
-    loop_var: "user"
-  ansible.builtin.include_tasks:
-    file: "tasks/enable_byobu_for_user.yml"
-
-- name: "Enable byobu for root"
-  become_user: "root"
-  become: true
-  block:
-    - name: Enable byobu for root
-      ansible.builtin.command: "byobu-enable"
-      register: output
-      changed_when: output.rc != 0
-
-    - name: "Import the byobu backend root"
-      ansible.builtin.template:
-        src: "templates/backend.j2"
-        dest: "/root/.byobu/backend"
-        owner: "root"
-        group: "root"
-        mode: "0755"
-
-    - name: "Enable byobu prompt for root"
-      register: output
-      changed_when: false
-      failed_when: false
-      ignore_errors: true
-      ansible.builtin.command: "byobu-enable-prompt"
-
