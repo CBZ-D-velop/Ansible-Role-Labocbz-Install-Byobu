@@ -14,7 +14,6 @@
         - "labocbz.install_byobu"
       vars:
         install_byobu_install_neofetch: "{{ inv_install_byobu_install_neofetch }}"
-        install_byobu_enable_byobu_for_all: "{{ inv_install_byobu_enable_byobu_for_all }}"
         install_byobu_enable_neofetch_for_all: "{{ inv_install_byobu_enable_neofetch_for_all }}"
       ansible.builtin.include_role:
         name: "labocbz.install_byobu"

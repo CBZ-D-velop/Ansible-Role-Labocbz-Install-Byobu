@@ -5,5 +5,4 @@ inv_prepare_host_users:
     sudoer: true
 
 inv_install_byobu_install_neofetch: true
-inv_install_byobu_enable_byobu_for_all: true
 inv_install_byobu_enable_neofetch_for_all: true
