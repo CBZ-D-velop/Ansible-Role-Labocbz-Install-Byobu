@@ -2,8 +2,8 @@
 # Don't forget to keep this file updated
 # molecule/<scenario>/verify.yml
 - name: "Verify"
-  hosts: "local"
-  gather_facts: true
+  hosts: "cicd-debian-12"
+  gather_facts: false
   tasks:
 
     - name: "Get list of directories in /home"
