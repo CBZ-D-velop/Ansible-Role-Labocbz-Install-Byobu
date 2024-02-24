@@ -30,7 +30,7 @@
         mode: "0755"
 
 - name: "Get list of directories in /home"
-  when: ((install_byobu__enable_neofetch_for_all | default(false)) and (install_byobu__install_neofetch | default(false))))
+  when: ((install_byobu__enable_neofetch_for_all | default(false)) and (install_byobu__install_neofetch | default(false)))
   ansible.builtin.command: "ls /home"
   register: home_directories
   changed_when: home_directories.rc != 0
