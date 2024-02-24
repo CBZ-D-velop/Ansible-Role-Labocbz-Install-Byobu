@@ -2,18 +2,19 @@
 # Don't forget to keep this file updated
 # molecule/<scenario>/verify.yml
 - name: "Verify"
-  hosts: "all"
-  gather_facts: true
+  hosts: "cicd-debian-11"
+  gather_facts: false
   tasks:
 
     - name: "Get list of directories in /home"
-      when: inv_install_byobu_enable_byobu_for_all or inv_install_byobu_enable_neofetch_for_all
-      ansible.builtin.command: "ls /home"
+      when: inv_install_byobu__enable_neofetch_for_all | default(false)
       register: home_directories
       changed_when: home_directories.rc != 0
+      ansible.builtin.command: |
+        ls /home
 
     - name: "Check Neofetch installs"
-      when: inv_install_byobu_install_neofetch
+      when: inv_install_byobu__install_neofetch | default(false)
       block:
         - name: "Check Neofetch for root"
           block:
@@ -30,7 +31,7 @@
                 path: "/root/.config/neofetch/config.conf"
 
         - name: "Check Neofetch for all users"
-          when: inv_install_byobu_enable_neofetch_for_all and home_directories
+          when: inv_install_byobu__enable_neofetch_for_all and home_directories
           block:
             - name: "Check Neofetch command response for all users"
               loop: "{{ home_directories.stdout_lines }}"
@@ -58,22 +59,14 @@
 
     - name: "Check Byobu installs"
       block:
-        - name: "Check Byobu for root"
-          block:
-            - name: "Check Byobu command response"
-              register: output
-              changed_when: output.rc != 0
-              failed_when: output.rc != 1
-              ansible.builtin.command: "byobu"
-
-            - name: "Check Byobu install and configuration for root"
-              register: file_check
-              failed_when: not file_check.stat.exists
-              ansible.builtin.stat:
-                path: "/root/.byobu/backend"
+        - name: "Check Byobu command response for root"
+          register: output
+          changed_when: output.rc != 0
+          failed_when: output.rc != 1
+          ansible.builtin.command: "byobu"
 
         - name: "Check Byobu for all users"
-          when: inv_install_byobu_enable_byobu_for_all and home_directories
+          when: home_directories | default(false)
           block:
             - name: "Get Byobu command response for all users"
               loop: "{{ home_directories.stdout_lines }}"
@@ -86,15 +79,3 @@
               changed_when: output.rc != 0
               failed_when: output.rc != 1
               ansible.builtin.command: "byobu"
-
-            - name: "Get Byobu install and configuration for all users"
-              loop: "{{ home_directories.stdout_lines }}"
-              loop_control:
-                loop_var: "user"
-              when: user != 'lost+found'
-              become: yes
-              become_user: "{{ user }}"
-              register: file_check
-              failed_when: not file_check.stat.exists
-              ansible.builtin.stat:
-                path: "/home/{{ user }}/.byobu/backend"

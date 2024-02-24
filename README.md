@@ -114,13 +114,11 @@ Some vars a required to run this role:
 
 ```YAML
 ---
-install_byobu_install_neofetch: true
+install_byobu__install_neofetch: true
 
-install_byobu_enable_neofetch_for_all: true
-install_byobu_log_commands_for_all: true
-install_byobu_set_nano_as_default_for_all: true
-
-install_byobu_default_backend: "tmux"
+install_byobu__enable_neofetch_for_all: true
+install_byobu__log_commands_for_all: true
+install_byobu__set_nano_as_default_for_all: true
 
 ```
 
@@ -133,9 +131,17 @@ In order to surchage vars, you have multiples possibilities but for mains cases 
 ```YAML
 # From inventory
 ---
+inv_prepare_host__users:
+  - login: "testuser"
+    group: "testuser"
+    sudoer: true
+    password: "secretpassword"
 
-inv_install_byobu_install_neofetch: true
-inv_install_byobu_enable_neofetch_for_all: true
+inv_install_byobu__install_neofetch: true
+
+inv_install_byobu__enable_neofetch_for_all: true
+inv_install_byobu__log_commands_for_all: true
+inv_install_byobu__set_nano_as_default_for_all: true
 
 ```
 
@@ -151,12 +157,14 @@ To run this role, you can copy the molecule/default/converge.yml playbook and ad
 
 ```YAML
 - name: "Include labocbz.install_byobu"
-    tags:
+  tags:
     - "labocbz.install_byobu"
-    vars:
-    install_byobu_install_neofetch: "{{ inv_install_byobu_install_neofetch }}"
-    install_byobu_enable_neofetch_for_all: "{{ inv_install_byobu_enable_neofetch_for_all }}"
-    ansible.builtin.include_role:
+  vars:
+    install_byobu__install_neofetch: "{{ inv_install_byobu__install_neofetch }}"
+    install_byobu__enable_neofetch_for_all: "{{ inv_install_byobu__enable_neofetch_for_all }}"
+    install_byobu__log_commands_for_all: "{{ inv_install_byobu__log_commands_for_all }}"
+    install_byobu__set_nano_as_default_for_all: "{{ inv_install_byobu__set_nano_as_default_for_all }}"
+  ansible.builtin.include_role:
     name: "labocbz.install_byobu"
 ```
 
@@ -178,6 +186,11 @@ Here you can put your change to keep a trace of your work and decisions.
 * Molecule now use remote Docker image by Lord Robin Crombez
 * Molecule now use custom Docker image in CI/CD by env vars
 * New CICD with needs and optimization
+
+### 2024-02-24: Fix and CI
+
+* Added support for new CI base
+* Edit all vars with __
 
 ## Authors
 

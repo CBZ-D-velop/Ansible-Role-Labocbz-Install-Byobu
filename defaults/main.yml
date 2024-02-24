@@ -1,6 +1,6 @@
 ---
-install_byobu_install_neofetch: true
+install_byobu__install_neofetch: true
 
-install_byobu_enable_neofetch_for_all: true
-install_byobu_log_commands_for_all: true
-install_byobu_set_nano_as_default_for_all: true
+install_byobu__enable_neofetch_for_all: true
+install_byobu__log_commands_for_all: true
+install_byobu__set_nano_as_default_for_all: true

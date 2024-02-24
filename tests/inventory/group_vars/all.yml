@@ -1,0 +1,12 @@
+---
+inv_prepare_host__users:
+  - login: "testuser"
+    group: "testuser"
+    sudoer: true
+    password: "secretpassword"
+
+inv_install_byobu__install_neofetch: true
+
+inv_install_byobu__enable_neofetch_for_all: true
+inv_install_byobu__log_commands_for_all: true
+inv_install_byobu__set_nano_as_default_for_all: true

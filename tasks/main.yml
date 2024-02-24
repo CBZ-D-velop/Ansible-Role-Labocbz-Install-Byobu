@@ -30,13 +30,13 @@
         mode: "0755"
 
 - name: "Get list of directories in /home"
-  when: ((install_byobu_enable_neofetch_for_all | default(false)) and (install_byobu_install_neofetch | default(false))) or (install_byobu_enable_byobu_for_all | default(false))
+  when: ((install_byobu__enable_neofetch_for_all | default(false)) and (install_byobu__install_neofetch | default(false)))
   ansible.builtin.command: "ls /home"
   register: home_directories
   changed_when: home_directories.rc != 0
 
 - name: "Install Neofetch and configure it"
-  when: install_byobu_install_neofetch
+  when: install_byobu__install_neofetch
   block:
     - name: "Intall packages"
       ansible.builtin.package:
@@ -69,7 +69,7 @@
 
     - name: "Configure Neofetchfor all detected users"
       loop: "{{ home_directories.stdout_lines }}"
-      when: user != 'lost+found' and home_directories.stdout_lines and install_byobu_enable_neofetch_for_all
+      when: user != 'lost+found' and home_directories.stdout_lines and install_byobu__enable_neofetch_for_all
       loop_control:
         loop_var: "user"
       ansible.builtin.include_tasks:
