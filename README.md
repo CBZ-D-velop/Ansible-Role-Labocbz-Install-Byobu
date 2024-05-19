@@ -18,7 +18,6 @@
 
 An Ansible role to install Byobu and import your configuration.
 
-
 The Ansible role installs Byobu, a terminal multiplexer that enhances the terminal experience by providing various features and customization options. Additionally, the role has the option to install Neofetch, a small utility that displays system information and ASCII art at the shell's startup.
 
 Byobu enriches the terminal environment by providing the ability to split the terminal into multiple panes, creating a more efficient workflow. It offers essential keybindings and shortcuts for managing the terminal sessions, making it an excellent tool for power users and system administrators.
@@ -191,6 +190,14 @@ Here you can put your change to keep a trace of your work and decisions.
 
 * Added support for new CI base
 * Edit all vars with __
+
+### 2024-05-19: New CI
+
+* Added Markdown lint to the CICD
+* Rework all Docker images
+* Change CICD vars convention
+* New workers
+* Removed all automation based on branch
 
 ## Authors
 
