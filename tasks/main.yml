@@ -2,24 +2,15 @@
 - name: "Install and configure Byobu and import custom Shell"
   block:
     - name: "Install packages"
+      retries: 3
+      delay: 10
+      until: output is success
+      register: output
       ansible.builtin.package:
         update_cache: true
         name:
           - "tmux"
           - "byobu"
-
-    - name: "Copy byobu configurations files"
-      loop:
-        - "f-keys.tmux"
-        - "f-keys.screen"
-      loop_control:
-        loop_var: file
-      ansible.builtin.copy:
-        src: "files/{{ file }}"
-        dest: "/usr/share/byobu/keybindings/{{ file }}"
-        owner: "root"
-        group: "root"
-        mode: "0755"
 
     - name: "Import the custom shell"
       ansible.builtin.template:
@@ -39,6 +30,10 @@
   when: install_byobu__install_neofetch
   block:
     - name: "Intall packages"
+      retries: 3
+      delay: 10
+      until: output is success
+      register: output
       ansible.builtin.package:
         update_cache: true
         name:

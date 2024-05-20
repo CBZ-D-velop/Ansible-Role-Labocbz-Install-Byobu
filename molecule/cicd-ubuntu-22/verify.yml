@@ -38,7 +38,7 @@
               loop_control:
                 loop_var: "user"
               when: user != 'lost+found'
-              become: yes
+              become: true
               become_user: "{{ user }}"
               register: output
               changed_when: output.rc != 0
@@ -50,7 +50,7 @@
               loop_control:
                 loop_var: "user"
               when: user != 'lost+found'
-              become: yes
+              become: true
               become_user: "{{ user }}"
               register: file_check
               failed_when: not file_check.stat.exists
@@ -73,7 +73,7 @@
               loop_control:
                 loop_var: "user"
               when: user != 'lost+found'
-              become: yes
+              become: true
               become_user: "{{ user }}"
               register: output
               changed_when: output.rc != 0
