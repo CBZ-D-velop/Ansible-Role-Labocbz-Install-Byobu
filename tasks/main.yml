@@ -62,10 +62,13 @@
         line: "neofetch"
         state: present
 
-    - name: "Configure Neofetchfor all detected users"
-      loop: "{{ home_directories.stdout_lines }}"
-      when: user != 'lost+found' and home_directories.stdout_lines and install_byobu__enable_neofetch_for_all
-      loop_control:
-        loop_var: "user"
-      ansible.builtin.include_tasks:
-        file: "tasks/configure_neofetch_for_user.yml"
+    - name: "Configure for all users, block check"
+      when: home_directories.stdout_lines is defined
+      block:
+        - name: "Configure Neofetchfor all detected users"
+          loop: "{{ home_directories.stdout_lines }}"
+          when: user != 'lost+found' and install_byobu__enable_neofetch_for_all
+          loop_control:
+            loop_var: "user"
+          ansible.builtin.include_tasks:
+            file: "tasks/configure_neofetch_for_user.yml"
