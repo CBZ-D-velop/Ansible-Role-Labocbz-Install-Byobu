@@ -2,24 +2,15 @@
 - name: "Install and configure Byobu and import custom Shell"
   block:
     - name: "Install packages"
+      retries: 3
+      delay: 10
+      until: output is success
+      register: output
       ansible.builtin.package:
         update_cache: true
         name:
           - "tmux"
           - "byobu"
-
-    - name: "Copy byobu configurations files"
-      loop:
-        - "f-keys.tmux"
-        - "f-keys.screen"
-      loop_control:
-        loop_var: file
-      ansible.builtin.copy:
-        src: "files/{{ file }}"
-        dest: "/usr/share/byobu/keybindings/{{ file }}"
-        owner: "root"
-        group: "root"
-        mode: "0755"
 
     - name: "Import the custom shell"
       ansible.builtin.template:
@@ -39,6 +30,10 @@
   when: install_byobu__install_neofetch
   block:
     - name: "Intall packages"
+      retries: 3
+      delay: 10
+      until: output is success
+      register: output
       ansible.builtin.package:
         update_cache: true
         name:
@@ -67,10 +62,13 @@
         line: "neofetch"
         state: present
 
-    - name: "Configure Neofetchfor all detected users"
-      loop: "{{ home_directories.stdout_lines }}"
-      when: user != 'lost+found' and home_directories.stdout_lines and install_byobu__enable_neofetch_for_all
-      loop_control:
-        loop_var: "user"
-      ansible.builtin.include_tasks:
-        file: "tasks/configure_neofetch_for_user.yml"
+    - name: "Configure for all users, block check"
+      when: home_directories.stdout_lines is defined
+      block:
+        - name: "Configure Neofetchfor all detected users"
+          loop: "{{ home_directories.stdout_lines }}"
+          when: user != 'lost+found' and install_byobu__enable_neofetch_for_all
+          loop_control:
+            loop_var: "user"
+          ansible.builtin.include_tasks:
+            file: "tasks/configure_neofetch_for_user.yml"
